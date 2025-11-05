@@ -1,42 +1,37 @@
 #!/bin/bash
 
-# Atualiza o sistema
-echo "Atualizando pacotes..."
-sudo apt update && sudo apt upgrade -y
+echo "Atualizando o sistema..."
+sudo dnf upgrade --refresh -y
 
 # Instala C++ (GCC/G++)
-echo "Instalando compilador C++ (g++)..."
-sudo apt install -y build-essential
+echo "Instalando compilador C++ (GCC/G++)..."
+sudo dnf install -y gcc gcc-c++
 
-# Instala Python 3 e pip
-echo "Instalando Python 3 e pip..."
-sudo apt install -y python3 python3-pip python3-venv
+# Instala Python 3, pip e venv
+echo "Instalando Python 3, pip e venv..."
+sudo dnf install -y python3 python3-pip python3-virtualenv
 
-# Instala Node.js e npm (última LTS)
-echo "Instalando Node.js e npm..."
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt install -y nodejs
+# Instala Node.js LTS (via NodeSource)
+echo "Instalando Node.js LTS..."
+curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
+sudo dnf install -y nodejs
 
 # Instala CMake
 echo "Instalando CMake..."
-sudo apt install -y cmake
+sudo dnf install -y cmake
 
-# Instala adb (Android Debug Bridge)
-echo "Instalando ADB (Android Debug Bridge)..."
-sudo apt install -y adb
+# Instala ADB (Android Debug Bridge)
+echo "Instalando ADB..."
+sudo dnf install -y android-tools
 
 # Instala Visual Studio Code
 echo "Instalando Visual Studio Code..."
-wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-sudo install -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/
-sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] \
-https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-rm microsoft.gpg
-sudo apt update
-sudo apt install -y code
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+sudo dnf check-update
+sudo dnf install -y code
 
-# Limpeza final
-echo "Limpando pacotes desnecessários..."
-sudo apt autoremove -y
+echo "Removendo pacotes desnecessários..."
+sudo dnf autoremove -y
 
 echo "Instalação concluída!"
